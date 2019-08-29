@@ -1,0 +1,8 @@
+.DS_Store
+
+# Ignore the node modules folder
+node_modules
+
+# also sass-cache
+.sass-cache
+.sass-cache/*
