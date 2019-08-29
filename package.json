@@ -1,6 +1,6 @@
 {
   "name": "@outisfun/xpr-npm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A small collection of XPR modules and helper funcs.",
   "main": "index.js",
   "browserify-css": {
