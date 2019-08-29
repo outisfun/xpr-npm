@@ -1,108 +1,30 @@
 module.exports = function(grunt) {
 
-  var story = grunt.option('story') || 'preview'; // if no story is specified, run on the
-  var customModule = grunt.option('customModule') || ''; // if no story is specified, run on the
+  var story = grunt.option('xpr') || 'xpr'; // if no story is specified, run on the
+
+  //Force fallback on async module
+  global.setImmediate = undefined;
 
   grunt.initConfig({
 
     pkg: grunt.file.readJSON('package.json'),
 
-    shell: {
-      options: {
-        stderr: false
-      },
-      buildStory: {
-        command: story => `node build-story ${story}`
-      },
-      initStory: {
-        command: story => `node init-story ${story}`
-      },
-      initCustomModule: {
-        command: story => `node init-custom-module ${story} ${customModule}`
-      }
-    },
-
     browserify: {
       options: {
         browserifyOptions: {
-          paths: [ './', './src', './src/js', './stories', './stories/**/build/', './src/modules/layouts/', './src/modules/elements/', './src/modules/elements/**/' ]
-        }
+          paths: [ './', './modules/', './build/']
+        },
+        transform: [['browserify-css', { global: true }]]
       },
-      builder: {
+      xpr: {
         files: [{
-          cwd: './',
-          src: './builder/script_build.js',
+          src: './build/index.js',
           expand: true,
           rename: function(dest, src) {
-              var newPath = src.replace('_build', '');
-              var customDest = this.cwd + newPath;
-              return customDest;
+            return src.replace('build/', '');
           }
         }]
       },
-      stories: {
-        files: [{
-          cwd: './',
-          src: './stories/' + story + '/build/scripts.js',
-          expand: true,
-          rename: function(dest, src) {
-              var newPath = src.replace('build', 'dist');
-              var customDest = this.cwd + newPath;
-              return customDest;
-          }
-        }]
-      },
-    },
-
-    handlebars: {
-      compile: {
-        options: {
-          namespace: 'modules',
-          processName: function(filePath) {
-            var pieces = filePath.split('/');
-            return pieces[pieces.length - 2];
-          },
-          wrapped: true,
-          node: true
-        },
-        files: {
-          'src/templates.js': ['./src/modules/layouts/**/*.hbs', './src/modules/elements/**/*.hbs',  './src/modules/custom/**/*.hbs','./stories/**/*.hbs'],
-        }
-      }
-    },
-
-    responsive_images: {
-      myTask: {
-        options: {
-          sizes: [
-          {
-            name: 'xs',
-            width: 390,
-            quality: 50
-          },
-          {
-            name: 'md',
-            width: 640,
-            quality: 70
-          },
-          {
-            name: "lg",
-            width: 1024,
-            quality: 70
-          },
-          {
-            name: 'xl',
-            width: 1600,
-            quality: 50
-          }]
-        },
-        files: [{
-          expand: true,
-          src: ['**.{jpg,gif,png}'],
-          cwd: './stories/' + story + '/build/assets/',
-          dest: './stories/' + story + '/dist/assets/'
-        }]
-      }
     },
 
     sass: {
@@ -185,8 +107,8 @@ module.exports = function(grunt) {
         tasks: ['sass:stories', 'sass:builder']
       },
       js: {
-        files: ['./src/*.js', './stories/**/build/*.js', './builder/script_build.js', './src/modules/**/*.js'],
-        tasks: ['browserify:stories', 'browserify:builder']
+        files: ['./build/index.js', './modules/**/script.js'],
+        tasks: ['browserify']
       },
       // rebuild template after changes in data
       data: {
@@ -224,10 +146,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-responsive-images');
 
   grunt.registerTask('lintall', ['eslint']);
-
-  grunt.registerTask('init-custom-module', ['shell:initCustomModule:' + story]);
-  grunt.registerTask('init-story', ['shell:initStory:' + story, 'shell:buildStory:' + story, 'browserify:stories', 'sass:stories', 'autoprefixer:stories', 'watch']);
-  grunt.registerTask('build-story', ['handlebars', 'shell:buildStory:' + story, 'browserify:stories', 'sass:stories', 'autoprefixer:stories', 'watch']);
 
   grunt.registerTask('default', ['watch']); //test
 };

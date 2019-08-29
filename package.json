@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "A small collection of XPR modules and helper funcs.",
   "main": "index.js",
+  "browserify-css": {
+    "autoInject": true,
+    "minify": true,
+    "rootDir": "."
+  },
   "dependencies": {
     "body-scroll-lock": "^2.6.4",
     "browserfs": "^1.4.3",
@@ -26,7 +31,11 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "autoprefixer": "^9.4.9",
+    "babelify": "^10.0.0",
+    "browserify-css": "^0.15.0",
     "browserify-fs": "^1.0.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
@@ -48,7 +57,8 @@
     "grunt-responsive-images": "^1.10.1",
     "grunt-shell": "^3.0.1",
     "grunt-yaml": "^0.4.2",
-    "load-grunt-tasks": "^4.0.0"
+    "load-grunt-tasks": "^4.0.0",
+    "parcelify": "^2.2.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
