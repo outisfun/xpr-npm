@@ -7,7 +7,6 @@
     "body-scroll-lock": "^2.6.4",
     "browserfs": "^1.4.3",
     "browsernizr": "^2.3.0",
-    "fs": "0.0.1-security",
     "gsap": "^2.0.2",
     "hammerjs": "^2.0.8",
     "howler": "^2.1.1",
@@ -15,15 +14,11 @@
     "ionicons": "^4.5.6",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.11",
-    "mkdirp": "^0.5.1",
     "modernizr": "^3.7.1",
     "npm": "^6.9.0",
     "pixi.js": "^5.0.3",
     "scrollmagic": "^2.0.6",
-    "victor": "^1.1.0",
-    "write": "^1.0.3",
-    "write-file": "^1.0.0",
-    "yamljs": "^0.3.0"
+    "victor": "^1.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -32,7 +27,6 @@
     "babelify": "^10.0.0",
     "browserify-fs": "^1.0.0",
     "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
