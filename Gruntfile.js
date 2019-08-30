@@ -13,15 +13,14 @@ module.exports = function(grunt) {
       options: {
         browserifyOptions: {
           paths: [ './', './modules/', './build/']
-        },
-        transform: [['browserify-css', { global: true }]]
+        }
       },
       xpr: {
         files: [{
           src: './build/index.js',
           expand: true,
           rename: function(dest, src) {
-            return src.replace('build/', '');
+            return src.replace('build/', 'dist/');
           }
         }]
       },
