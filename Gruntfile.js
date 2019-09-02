@@ -106,7 +106,7 @@ module.exports = function(grunt) {
         tasks: ['sass:stories', 'sass:builder']
       },
       js: {
-        files: ['./build/index.js', './modules/**/script.js'],
+        files: ['./build/index.js', './modules/**/index.js'],
         tasks: ['browserify']
       },
       // rebuild template after changes in data

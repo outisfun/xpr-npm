@@ -8,10 +8,9 @@ function createElementFromHTML(htmlString) {
 }
 
 function EndlessTape(opts) {
-
-  this.DOM = { container: (opts.container || document.querySelector("body")) };
-  console.log(opts);
+  this.DOM = {};
   var _defaultOptions = {
+    container: document.querySelector("body"),
     direction: 1,
     markup: '<span>the sorrows of pain and regret are left to the dead and the dying. </span>',
     speed: 15,
@@ -22,13 +21,13 @@ function EndlessTape(opts) {
       height: '90px'
     },
     markupStyles: {
-    }
+    },
+    autoStart: true
   };
 
   this.animations = [];
   this.position = 0;
   this.opts = _.merge(_defaultOptions, opts);
-  console.log("the sorrows");
   this.init();
 }
 
@@ -66,17 +65,19 @@ EndlessTape.prototype.buildMarkup = function() {
 
   this.DOM.inner.appendChild(_roller);
   this.DOM.el.appendChild(this.DOM.inner);
-  this.DOM.container.appendChild(this.DOM.el);
+  this.opts.container.appendChild(this.DOM.el);
 
   setTimeout(function() {
     // set height to allow for centering etc
     TweenLite.set(self.DOM.inner, { height: _markup.offsetHeight, width: '100%' });
-    console.log(_markup, _markup.offsetHeight);
     var _count = Math.ceil(window.innerWidth/_markup.offsetWidth*2);
     for (var i = 0; i < _count; i++) {
       _roller.appendChild(_markup.cloneNode(true));
     }
-    self.roll();
+    if (self.opts.autoStart === true) {
+      self.roll();
+    }
+
   }, 200);
 };
 

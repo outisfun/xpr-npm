@@ -4,25 +4,24 @@ require('scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap');
 var gsap = require('gsap');
 
 function XPR_SplitText(el, opts) {
-  console.log(el, opts);
   this.DOM = {el: el};
-  this.splitText = new SplitText(this.DOM.el, { type: ['chars', 'lines'] });
+  this.splitText = new SplitText(this.DOM.el, { type: ['lines', 'words', 'chars'] });
 
   var defaultOptions = {
     animation: {
       from: {
-        x: 20,
-        opacity: 0.5
+        opacity: 0
       },
       to: {
-        x: 0,
-        opacity: 1
+        opacity: 1,
+        ease: Power2.easeOut
       }
     },
-    speed: 0.35,
-    staggerSpeed: 0.05
+    speed: 0.55,
+    staggerSpeed: 0.003,
+    animateOnPageEnter: true
   };
-
+  this.isAnimated = false;
   this.opts = _.merge(defaultOptions, opts);
   this.init();
 }
@@ -30,6 +29,25 @@ function XPR_SplitText(el, opts) {
 XPR_SplitText.prototype.init = function() {
   this.setInitialValues();
   this.setTimeline();
+
+  if (this.opts.animateOnPageEnter === true) {
+    this.initEventListeners();
+  }
+};
+
+XPR_SplitText.prototype.initEventListeners = function() {
+  var self = this;
+  var _elOnScroll = function(e) {
+    if (self.isInViewport() && !self.isAnimated) {
+      self.animate();
+    }
+  };
+  this.elOnScroll = _elOnScroll.bind(this);
+  window.addEventListener('scroll', this.elOnScroll);
+};
+
+XPR_SplitText.prototype.removeEventListeners = function() {
+  window.removeEventListener('scroll', this.elOnScroll);
 };
 
 XPR_SplitText.prototype.setTimeline = function() {
@@ -42,30 +60,36 @@ XPR_SplitText.prototype.setInitialValues = function() {
   _.forEach (this.splitText.lines, function(l, ind) {
     TweenLite.set(l, {overflow: 'hidden'});
   });
+  _.forEach (this.splitText.words, function(l, ind) {
+    TweenLite.set(l, {lineHeight: '1em'});
+  });
   _.forEach (this.splitText.chars, function(c, ind) {
     TweenLite.set(c, self.opts.animation.from );
   });
 };
 
-XPR_SplitText.prototype.animate = function(direction, callback) {
-  if (callback && (typeof callback === 'function')) { this._tl.addCallback(callback); }
-  this._tl[ (direction !== -1) ? 'play' : 'reverse']();
+XPR_SplitText.prototype.animate = function() {
+  this.isAnimated = true;
+  this._tl.play();
+  this.removeEventListeners();
 };
 
-XPR_SplitText.prototype.animateOnScroll = function(opts) {
-  var self = this;
-  this.controller = new ScrollMagic.Controller();
-  var _opts = {
-    triggerElement: this.DOM.el,
-    triggerHook: 0.7
-  };
-  var scrollSceneOpts = _.merge(_opts, opts);
+XPR_SplitText.prototype.isInViewport = function() {
+  var bounding = this.DOM.el.getBoundingClientRect();
+  return (
+    (bounding.top >= 0) && (bounding.top <= window.innerHeight) &&
+    bounding.left >= 0 &&
+    bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
 
-  this.scrollScene = new ScrollMagic.Scene(scrollSceneOpts)
-    .on('enter', function() {
-      self.animate();
-    })
-    .addTo(this.controller);
+  // alternative bounds calculation?
+  // return (
+  //   (bounding.top >= 0) && (bounding.top <= window.innerHeight) &&
+  //   bounding.left >= 0 &&
+  //   bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+  //   bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+  // );
 };
+
 
 module.exports = XPR_SplitText;

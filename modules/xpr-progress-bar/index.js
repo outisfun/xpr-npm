@@ -18,7 +18,7 @@ function ProgressBar(container, opts) {
       top: 0,
       left: 0,
       width: '100%',
-      height: '1px',
+      height: '3px',
       backgroundColor: 'transparent'
     },
     progressBarIndicatorStyles: {
@@ -77,11 +77,11 @@ ProgressBar.prototype.initEvents = function() {
       self.updateIndicator(scrollPercent);
     });
   } else {
-    var _tl = new TimelineLite()
-      .to(this.DOM.progressBarIndicator, 1, {
-        width: '100%'
-      });
-    this.opts.updateOn.setTween(_tl);
+    // this.tl = TweenLite()
+    //   .to(this.DOM.progressBarIndicator, 1, {
+    //     width: '100%'
+    //   });
+    // this.opts.updateOn.setTween(_tl);
   }
 
 };
