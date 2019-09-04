@@ -44,8 +44,6 @@ var opts = {
 }
 var splitTextEl = new XPR.SplitText(headingEl, opts);
 
-// if you set animateOnPageEnter to false, you have to trigger the animation manually
-
+// if you set animateOnPageEnter to false, you have to trigger the animation manually, like this:
+splitTextEl.animate();
 ```
-
-### How to use:
